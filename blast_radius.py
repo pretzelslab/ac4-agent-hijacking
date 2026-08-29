@@ -29,32 +29,26 @@ FIELD_SENSITIVITY = {
 
 SENSITIVITY_RANK = {"PUBLIC": 0, "INTERNAL": 1, "CONFIDENTIAL": 2, "RESTRICTED": 3}
 
-# DORA significant incident thresholds (simplified)
-DORA_THRESHOLDS = {
-    "CONFIDENTIAL": 500,   # >500 CONFIDENTIAL records = major incident
-    "RESTRICTED":   50,    # >50 RESTRICTED records = major incident
-    "INTERNAL":     5000,  # >5000 INTERNAL records = major incident
-}
-
-# ── Helpers ────────────────────────────────────────────────────────────────────
+# Helpers
 
 def highest_sensitivity(fields: list[str]) -> str:
     ranked = sorted(fields, key=lambda f: SENSITIVITY_RANK.get(FIELD_SENSITIVITY.get(f, "PUBLIC"), 0), reverse=True)
     return FIELD_SENSITIVITY.get(ranked[0], "PUBLIC") if ranked else "PUBLIC"
 
+# DORA incident classification requires multiple materiality criteria.
+# Record count and data sensitivity alone are not sufficient for a final determination.
 
 def dora_classification(records_accessed: int, sensitivity: str) -> dict:
-    threshold = DORA_THRESHOLDS.get(sensitivity, 5000)
-    is_major = records_accessed >= threshold
     return {
-        "threshold_records": threshold,
         "records_accessed": records_accessed,
-        "classification": "MAJOR_INCIDENT" if is_major else "STANDARD_INCIDENT",
-        "reportable": is_major,
+        "sensitivity": sensitivity,
+        "classification": "REQUIRES_ASSESSMENT",
+        "reportable": False,
         "reason": (
-            f"Exceeds {threshold} {sensitivity} record threshold — report to competent authority within 4 hours"
-            if is_major
-            else f"Below {threshold} {sensitivity} record threshold — internal review and logging required"
+            "DORA major incident classification requires assessment of multiple "
+            "materiality criteria, including affected clients or transactions, "
+            "service criticality, incident duration, geographical spread, "
+            "data loss, and economic impact."
         ),
     }
 
