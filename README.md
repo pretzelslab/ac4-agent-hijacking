@@ -131,11 +131,10 @@ Runs post-attack. Outputs:
   "data_fields": ["name", "credit_score", "income", "status"],
   "reversibility": "IRREVERSIBLE",
   "dora_classification": {
-    "threshold": "MAJOR_INCIDENT",
-    "records_threshold": 500,
-    "records_accessed": 10,
-    "reportable": false,
-    "reason": "Below 500 CONFIDENTIAL+ record threshold — internal review required"
+  "classification": "REQUIRES_ASSESSMENT",
+  "records_accessed": 10,
+  "reportable": false,
+  "reason": "DORA major incident classification depends on multiple materiality criteria, including affected clients, service criticality, duration, data loss, geographical spread, and economic impact."
   },
   "eu_ai_act": {
     "article": "Art.9",
@@ -158,7 +157,7 @@ Runs post-attack. Outputs:
 |-----------|--------|---------------------|
 | OWASP LLM Top 10 2025 | #1 — Indirect Prompt Injection | Attack class: goal hijacking via retrieved content |
 | EU AI Act | Art.9 | Risk management system — must detect and log agentic failures |
-| DORA | Art.19 | Major ICT incident reporting if threshold met (500+ CONFIDENTIAL records) |
+| DORA | Art.19 | Major ICT incident reporting where applicable materiality criteria are met |
 | GDPR | Art.5 | Data minimisation violated — full table dump for single-record task |
 | GDPR | Art.33 | 72-hour supervisory authority notification if rights/freedoms at risk |
 
