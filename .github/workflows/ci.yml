@@ -1,0 +1,35 @@
+name: AC4 CI
+
+on:
+  push:
+    branches:
+      - main
+      - "fix/**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Compile Python
+        run: python -m py_compile blast_radius.py agent.py tools.py scenarios.py
+
+      - name: Generate simulation audit log
+        run: python agent.py --scenario simulation
+
+      - name: Run blast radius assessment
+        run: python blast_radius.py
