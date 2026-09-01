@@ -22,8 +22,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
       - name: Compile Python
-        run: python -m py_compile blast_radius.py
+        run: python -m py_compile blast_radius.py agent.py tools.py scenarios.py
+
+      - name: Generate simulation audit log
+        run: python agent.py --scenario simulation
 
       - name: Run blast radius assessment
         run: python blast_radius.py
